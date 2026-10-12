@@ -115,7 +115,8 @@ while true; do
   if [ -z "$SID" ]; then
     SID="$(uuidgen | tr 'A-Z' 'a-z')"; echo "$SID" > "$HOME/jarvis/.session-id"
   fi
-  if ls "$HOME"/.claude/projects/*/"$SID".jsonl >/dev/null 2>&1; then
+  TR=("$HOME"/.claude/projects/*/"$SID".jsonl(N))   # (N): topilmasa xato emas, bo'sh ro'yxat
+  if [ ${#TR[@]} -gt 0 ]; then
     SESS=(--resume "$SID")
   else
     SESS=(--session-id "$SID")
