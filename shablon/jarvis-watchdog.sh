@@ -54,7 +54,10 @@ fi
 # --- 2) jarvis-loop.sh jarayoni bormi ---
 LOOP_PIDS="$(pgrep -f 'jarvis/jarvis-loop.sh' 2>/dev/null)"
 if [ -z "$LOOP_PIDS" ]; then
-  recycle "jarvis-loop.sh jarayoni yo'q"
+  # tizimga kirishda loop va watchdog bir vaqtda ko'tariladi — bir marta qayta tekshiramiz
+  sleep 8
+  LOOP_PIDS="$(pgrep -f 'jarvis/jarvis-loop.sh' 2>/dev/null)"
+  [ -z "$LOOP_PIDS" ] && recycle "jarvis-loop.sh jarayoni yo'q"
 fi
 
 # loop qancha vaqt ishlayapti (eng eski jarvis-loop.sh jarayoni; macOS ps -> lstart)

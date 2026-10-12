@@ -17,8 +17,14 @@ ogoh() { print -P "%F{yellow}DIQQAT%f $*"; }
 
 # ---------------------------------------------------------------- 0) tekshiruv
 [ "$(uname)" = "Darwin" ] || xato "Bu o'rnatuvchi faqat macOS uchun."
-[ -e "$J/jarvis-loop.sh" ] && xato "$J/jarvis-loop.sh allaqachon bor — bu mashinada Jarvis o'rnatilgan. To'xtadim, hech narsaga tegmadim."
-ls "$HOME/Library/LaunchAgents" 2>/dev/null | grep -q '\.jarvis\.plist$' && xato "LaunchAgents ichida boshqa *.jarvis.plist bor. To'xtadim."
+# $J/.kit-chala = shu o'rnatuvchining o'zi boshlab, tugata olmagan o'rnatish — uni davom ettirish mumkin.
+CHALA="$J/.kit-chala"
+if [ ! -e "$CHALA" ]; then
+  [ -e "$J/jarvis-loop.sh" ] && xato "$J/jarvis-loop.sh allaqachon bor — bu mashinada Jarvis o'rnatilgan. To'xtadim, hech narsaga tegmadim."
+  ls "$HOME/Library/LaunchAgents" 2>/dev/null | grep -q '\.jarvis\.plist$' && xato "LaunchAgents ichida boshqa *.jarvis.plist bor. To'xtadim."
+else
+  ogoh "Tugallanmagan o'rnatish topildi — davom ettiryapman."
+fi
 xcode-select -p >/dev/null 2>&1 || xato "Xcode Command Line Tools yo'q. Avval: xcode-select --install"
 command -v claude >/dev/null || xato "Claude Code yo'q. Avval: curl -fsSL https://claude.ai/install.sh | bash   (keyin yangi Terminal oching)"
 if ! command -v bun >/dev/null; then
@@ -32,7 +38,7 @@ claude auth status >/dev/null 2>&1 || xato "Claude'ga login qilinmagan. Avval Te
 ok "Claude login bor"
 
 # ---------------------------------------------------------------- 1) sozlama
-oqi() { "$PY" -c 'import json,sys; v=json.load(open(sys.argv[1])).get(sys.argv[2],""); print(v if isinstance(v,str) else " ".join(map(str,v)))' "$KIT/sozlama.json" "$1" 2>/dev/null; }
+oqi() { "$PY" -c 'import json,sys; v=json.load(open(sys.argv[1])).get(sys.argv[2],""); print(" ".join(map(str,v)) if isinstance(v,list) else ("" if v is None else str(v).strip()))' "$KIT/sozlama.json" "$1" 2>/dev/null; }
 sora() {
   local v; v="$(oqi "$1")"
   while [ -z "$v" ]; do
@@ -52,6 +58,10 @@ TOKEN="$(sora BOT_TOKEN "Bot token (@BotFather dan)")"
 GEMINI="$(oqi GEMINI_API_KEY)"
 XODIMLAR="$(oqi XODIMLAR)"
 
+# sora() $(...) ichida ishlaydi — undagi exit faqat ichki qobiqni to'xtatadi, shuning uchun bu yerda tekshiramiz
+for v in "$OWNER" "$NAME" "$BIZ" "$GOAL" "$TGID" "$TOKEN"; do
+  [ -n "$v" ] || xato "Sozlama to'liq emas. $KIT/sozlama.json da OWNER, JARVIS, BIZ, GOAL, SLUG, TGID, BOT_TOKEN ni to'ldiring."
+done
 [ -n "$SLUG" ] || xato "SLUG bo'sh (faqat a-z va 0-9)."
 case "$TGID" in ''|*[!0-9]*) xato "Telegram ID faqat raqam bo'lishi kerak: '$TGID'";; esac
 
@@ -63,6 +73,7 @@ ok "Bot: @$BOTUSER · ega: $OWNER ($TGID) · $BIZ"
 mkdir -p "$J/tg/inbox" "$B/1-tizim" "$B/3-shaxsiy" "$B/9-arxiv" \
          "$B/2-biznes/obyektlar" "$B/2-biznes/kontent" "$B/2-biznes/reklama" \
          "$B/2-biznes/hisobotlar" "$B/2-biznes/sayt" "$B/2-biznes/mijozlar"
+touch "$CHALA"
 
 quy() {   # quy <shablon> <manzil> — __KALIT__ larni almashtirib yozadi
   OWNER="$OWNER" NAME="$NAME" BIZ="$BIZ" GOAL="$GOAL" SLUG="$SLUG" TGID="$TGID" UY="$HOME" \
@@ -152,9 +163,11 @@ L="$HOME/Library/LaunchAgents"; mkdir -p "$L"
 quy "$SH/jarvis.plist"          "$L/com.$SLUG.jarvis.plist"
 quy "$SH/jarvis.watchdog.plist" "$L/com.$SLUG.jarvis.watchdog.plist"
 U="$(id -u)"
-launchctl bootstrap "gui/$U" "$L/com.$SLUG.jarvis.plist"          || xato "launchd: jarvis yuklanmadi"
-launchctl bootstrap "gui/$U" "$L/com.$SLUG.jarvis.watchdog.plist" || xato "launchd: watchdog yuklanmadi"
-ok "launchd: com.$SLUG.jarvis + watchdog"
+# qayta urinishda eski nusxa yuklangan bo'lishi mumkin
+launchctl bootout "gui/$U/com.$SLUG.jarvis.watchdog" 2>/dev/null
+launchctl bootout "gui/$U/com.$SLUG.jarvis" 2>/dev/null
+launchctl bootstrap "gui/$U" "$L/com.$SLUG.jarvis.plist" || xato "launchd: jarvis yuklanmadi"
+ok "launchd: com.$SLUG.jarvis"
 
 echo "Bot ko'tarilishini kutyapman (2 daqiqagacha)..."
 i=0
@@ -164,10 +177,13 @@ while [ $i -lt 150 ]; do
   sleep 3; i=$(( i + 3 ))
 done
 if [ -n "$BP" ] && kill -0 "$BP" 2>/dev/null; then
-  ok "$NAME ishlayapti. Telegramda @$BOTUSER ga yozing."
+  # watchdog ko'prik ko'tarilgandan KEYIN ulanadi — aks holda start paytida botni behuda qayta tug'diradi
+  launchctl bootstrap "gui/$U" "$L/com.$SLUG.jarvis.watchdog.plist" || xato "launchd: watchdog yuklanmadi"
+  rm -f "$CHALA"
+  ok "$NAME ishlayapti (watchdog ulandi). Telegramda @$BOTUSER ga yozing."
   echo "   Eslatma: ega avval botga /start bosishi kerak — aks holda bot unga yoza olmaydi."
   echo "   Boshqarish: ~/jarvis/jarvis-start.sh status | restart | yangi-sessiya | stop | log"
 else
-  ogoh "Ko'prik 150s ichida ko'tarilmadi. Tekshirish: tail -20 ~/jarvis/jarvis.log ; ~/jarvis/jarvis-start.sh status"
+  ogoh "Ko'prik 150s ichida ko'tarilmadi. Tekshirish: tail -20 ~/jarvis/jarvis.log . Sababni tuzatib, install.sh ni qayta ishga tushirish mumkin."
   exit 1
 fi

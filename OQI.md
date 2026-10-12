@@ -24,7 +24,7 @@ zsh jarvis-kit/install.sh
 O'rnatuvchi o'zi: bun ni qo'yadi, tokenni tekshiradi, `~/jarvis` va `~/brain` ni yaratadi, Telegram pluginni o'rnatib patchlaydi, launchd ga ulaydi va bot ko'tarilganini kutadi.
 Ega botga `/start` bosadi — tayyor.
 
-Boshqarish: `~/jarvis/jarvis-start.sh status | restart | yangi-sessiya | stop | log`
+Boshqarish: `~/jarvis/jarvis-start.sh status | restart | yangi-sessiya | stop | start | log`
 
 O'rnatgandan keyin `sozlama.json` ni Mac'dan o'chiring (ichida bot token bor).
 
@@ -47,6 +47,8 @@ O'rnatgandan keyin `sozlama.json` ni Mac'dan o'chiring (ichida bot token bor).
 Meta tokenini olish: business.facebook.com → Settings → Users → System users → Add → Generate token (muddatsiz). App "Live" rejimda bo'lsin.
 
 ## Ma'lum cheklovlar
+- Mac qayta yonganda bot faqat foydalanuvchi tizimga kirgandan keyin ko'tariladi. Avtomatik kirish: System Settings → Users & Groups → "Automatically log in as" (FileVault yoqilgan bo'lsa bu imkoniyat yo'q — parolni qo'lda kiritish kerak).
+- Xodimlar uchun cheklov faqat qoida darajasida: bot kompyuterda to'liq huquq bilan ishlaydi. Ishonchsiz odamni ruxsat ro'yxatiga qo'shmang.
 - Mac uxlasa yoki o'chsa — bot ham jim. Jiddiy ishlasa keyin VPS ga ko'chirish (Stark kabi) to'g'ri yo'l.
 - Bot bir necha hafta ishlab, reaksiya berib javob yozmay qo'ysa — `jarvis-start.sh yangi-sessiya` (kontekst shishgan).
 - Plugin yangilansa: `zsh ~/jarvis/patch-telegram-plugin.sh` ni qayta ishga tushiring.

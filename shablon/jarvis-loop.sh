@@ -107,11 +107,18 @@ while true; do
   sleep 1
   sweep_foreign
 
-  if [ -f "$HOME/jarvis/.started" ]; then
-    CONT="--continue"
+  # Suhbat o'z ID si bilan yuritiladi (--continue EMAS): aks holda ~/brain da ochilgan
+  # terminal sessiyasi "oxirgi suhbat" bo'lib qolib, bot o'shani davom ettirib yuborardi.
+  # Transkript fayli bor bo'lsa --resume, yo'q bo'lsa (birinchi marta yoki hali xabar
+  # kelmagan) --session-id. Teskarisi ikkalasida ham claude darrov xato bilan chiqadi.
+  SID="$(cat "$HOME/jarvis/.session-id" 2>/dev/null | tr -d ' \n')"
+  if [ -z "$SID" ]; then
+    SID="$(uuidgen | tr 'A-Z' 'a-z')"; echo "$SID" > "$HOME/jarvis/.session-id"
+  fi
+  if ls "$HOME"/.claude/projects/*/"$SID".jsonl >/dev/null 2>&1; then
+    SESS=(--resume "$SID")
   else
-    CONT=""
-    touch "$HOME/jarvis/.started"
+    SESS=(--session-id "$SID")
   fi
 
   # claude ko'tarilgach fonda "qaytdim" xabari ketadi
@@ -121,7 +128,7 @@ while true; do
   # script(1) PTY beradi; TUI chiqishi logni to'ldirmasin -> /dev/null
   # AskUserQuestion taqiqlangan: headless rejimda u sessiyani abadiy qotiradi.
   /usr/bin/script -q /dev/null \
-    claude ${CONT} \
+    claude "${SESS[@]}" \
     --channels plugin:telegram@claude-plugins-official \
     --append-system-prompt-file "$HOME/jarvis/JARVIS.md" \
     --dangerously-skip-permissions \

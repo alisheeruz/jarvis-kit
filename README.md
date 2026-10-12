@@ -39,6 +39,8 @@ git clone https://github.com/alisheeruz/jarvis-kit ~/jarvis-kit    # bor bo'lsa:
 | `GEMINI_API_KEY` | Ovozli xabarlar uchun (ixtiyoriy) | aistudio.google.com |
 | `XODIMLAR` | Botga yoza oladigan xodimlar Telegram ID lari (ixtiyoriy) | |
 
+`XODIMLAR` ni birinchi o'rnatishda bo'sh qoldirishni tavsiya qil: bot kompyuterda to'liq huquq bilan ishlaydi, xodim uchun cheklov faqat qoida darajasida (texnik to'siq emas). Egasi botga o'rganib olgach qo'shiladi.
+
 `SLUG` ni o'zing yasa: biznes nomidan, faqat `a-z0-9` (masalan `namanganuylari`).
 Javoblarni `~/jarvis-kit/sozlama.json` ga yoz (`XODIMLAR` — satrlar massivi). Token va kalitlarni chatga qayta chiqarma.
 
@@ -46,8 +48,9 @@ Javoblarni `~/jarvis-kit/sozlama.json` ga yoz (`XODIMLAR` — satrlar massivi). 
 ```
 zsh ~/jarvis-kit/install.sh
 ```
+Bu buyruq 3-5 daqiqa ishlashi mumkin (plugin yuklash + bot ko'tarilishini kutish) — uni **10 daqiqalik timeout bilan** ishga tushir, yarim yo'lda uzib qo'yma.
 U o'zi: bun ni qo'yadi, tokenni tekshiradi, `~/jarvis` va `~/brain` ni yaratadi, Telegram pluginni o'rnatib patchlaydi, launchd ga ulaydi, bot ko'tarilishini kutadi (2 daqiqagacha).
-`XATO` chiqsa — xabarni o'qi, sababini tuzat, qayta ishga tushir. O'rnatuvchini aylanib o'tib qo'lda o'rnatma.
+`XATO` chiqsa — xabarni o'qi, sababini tuzat, qayta ishga tushir (chala qolgan o'rnatishni o'rnatuvchi o'zi davom ettiradi). O'rnatuvchini aylanib o'tib qo'lda o'rnatma.
 
 Eslatma: o'rnatuvchi `~/.claude/settings.json` ga `skipDangerousModePermissionPrompt: true` va `~/.claude.json` ga `~/brain` uchun ishonch belgisini yozadi (zaxira nusxa yonida qoladi) — foydalanuvchiga bir qatorda ayt.
 
