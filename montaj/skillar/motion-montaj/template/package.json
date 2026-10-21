@@ -1,0 +1,16 @@
+{
+  "name": "motion-montaj-reel",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio src/index.jsx",
+    "render": "remotion render src/index.jsx Reel out/reel.mp4 --crf 18",
+    "still": "remotion still src/index.jsx Reel out/kadr.png"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "@remotion/google-fonts": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0"
+  }
+}

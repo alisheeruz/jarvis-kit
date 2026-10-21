@@ -53,3 +53,15 @@ Meta tokenini olish: business.facebook.com → Settings → Users → System use
 - Bot bir necha hafta ishlab, reaksiya berib javob yozmay qo'ysa — `jarvis-start.sh yangi-sessiya` (kontekst shishgan).
 - Plugin yangilansa: `zsh ~/jarvis/patch-telegram-plugin.sh` ni qayta ishga tushiring.
 - `~/.claude/settings.json` ga `skipDangerousModePermissionPrompt: true` yoziladi (zaxira nusxa yonida qoladi).
+
+## Montaj profili (`PROFIL: "montaj"`)
+Montajchi / SMM / marketolog uchun. O'rnatish yuqoridagidek, keyin qo'shimcha:
+```
+zsh jarvis-kit/montaj/setup.sh      # 10-25 daqiqa, ~3 GB
+```
+- Mac: Apple Silicon (M1 va yangi), 16 GB RAM, kamida 20 GB bo'sh joy.
+- `montaj-media.zip` (musiqa + SFX) ni setup.sh dan OLDIN `~/Downloads` ga tashlang — `~/Montaj/musiqa` va `~/Montaj/sfx` ga o'zi ochiladi. Zip repo'da yo'q (mualliflik huquqi), o'rnatuvchi alohida beradi.
+- Papkalar: `~/Montaj/kirish` (xom video) · `loyihalar` · `tayyor` · `musiqa` · `sfx`.
+- Video yuborish: Telegram bot faqat **20 MB gacha** faylni qabul qiladi ("Fayl" sifatida yuboring — sifat saqlanadi). Kattasini AirDrop qiling yoki `~/Montaj/kirish` ga tashlang, yoki Google Drive havolasini yuboring. Tayyor video 50 MB gacha Telegramga qaytadi.
+- Bir vaqtda bitta montaj: 1 daqiqalik video taxminan 10-15 daqiqada tayyor bo'ladi.
+- Montaj didi o'rgatiladi: har izoh `~/brain/1-tizim/montaj-qoidalari.md` ga yoziladi va keyingi videolarda takrorlanmaydi.

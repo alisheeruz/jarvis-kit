@@ -1,0 +1,22 @@
+# Har bir blok (bo'sh qator bilan ajratilgan) = ekranda bir vaqtda turadigan subtitr.
+# Blok ichidagi har qator = ekrandagi qator (ko'pi bilan 2 qator, qatorda 2-4 so'z).
+# *yulduzcha* ichidagi so'z aytilganda sarg'ish rangga kiradi (blokda 1-2 ta kalit so'z).
+# "#" bilan boshlangan qatorlar o'qilmaydi.
+
+Bir *dehqon* har kuni
+tongda dalaga chiqardi.
+
+Qo'shnisi undan
+*kulardi:*
+
+«Yomg'ir yo'q-ku,
+nega *ekyapsan?»*
+
+U esa *sabr* bilan
+urug' sepaverdi.
+
+Kuz kelganda
+savati *to'ldi.*
+
+Sabr qilgan
+*quruq* *qolmaydi.*

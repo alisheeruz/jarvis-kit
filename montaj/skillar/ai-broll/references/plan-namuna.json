@@ -1,0 +1,31 @@
+{
+  "title": "Namuna: ovoz ustiga jonli illyustratsiya (A usul)",
+  "main": "ovoz.m4a",
+  "layout": "full",
+  "aspect": "9:16",
+  "style": "Painterly digital illustration, semi-realistic with soft brushwork. Deep teal and dark blue shadows dominate the frame; a single warm golden light source glows and casts volumetric rays with floating dust. Figures are faceless silhouettes or seen from behind, in modest traditional Central Asian clothing. Uzbek interior details: carved wooden doors, suzani textiles, ceramic teapots. Cinematic, quiet mood. The lower third of the frame fades into deep empty shadow.",
+  "refs": [],
+  "shots": [
+    {
+      "id": "k01", "start": 0.0, "end": 4.6,
+      "line": "Ayol kishi go'zalligini eridan yashirmasligi kerak",
+      "method": "animate", "move": "in", "dust": true,
+      "image_prompt": "Close-up: a woman's hand lifts a glowing golden patterned silk shawl out of an old carved wooden chest. A small oil lantern stands beside the chest.",
+      "motion_prompt": "Slow push-in. The shawl rises and ripples gently as if weightless, the lantern flame flickers, dust floats in the light. Everything else stays still."
+    },
+    {
+      "id": "k02", "start": 4.6, "end": 9.8,
+      "line": "aks holda erkakning ko'zi boshqalarida bo'ladi",
+      "method": "animate", "move": "out",
+      "image_prompt": "Wide shot from behind: the silhouette of a man in a long coat walks away down a foggy village street at night. One street lamp glows above him, a few lit windows far ahead.",
+      "motion_prompt": "Static camera. The man walks slowly away, fog drifts across the street, the lamp flickers faintly. Calm, slow motion."
+    },
+    {
+      "id": "k03", "start": 9.8, "end": 14.5,
+      "line": "shu tariqa er-xotin o'rtasida sovuqchilik boshlanadi",
+      "method": "animate", "move": "in",
+      "image_prompt": "Medium shot: two figures sit apart at opposite ends of a low table, not facing each other, two untouched tea bowls between them. A frost-covered window above them lets in cold blue light; no warm light in this frame.",
+      "motion_prompt": "Very slow push-in. Faint steam rises from one tea bowl, snow falls outside the window. The figures stay completely still."
+    }
+  ]
+}

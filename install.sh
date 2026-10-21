@@ -56,6 +56,12 @@ SLUG="$(sora SLUG "Qisqa nom (lotin, bo'shliqsiz)" | tr -cd 'a-z0-9')"
 TGID="$(sora TGID "Egasining Telegram ID raqami (@userinfobot dan)")"
 TOKEN="$(sora BOT_TOKEN "Bot token (@BotFather dan)")"
 GEMINI="$(oqi GEMINI_API_KEY)"
+PROFIL="$(oqi PROFIL)"; PROFIL="${PROFIL:-kochmas-mulk}"
+case "$PROFIL" in
+  kochmas-mulk) SHP="$SH" ;;
+  montaj)       SHP="$SH/montaj" ;;
+  *) xato "PROFIL noto'g'ri: '$PROFIL' (kochmas-mulk yoki montaj)" ;;
+esac
 XODIMLAR="$(oqi XODIMLAR)"
 
 # sora() $(...) ichida ishlaydi — undagi exit faqat ichki qobiqni to'xtatadi, shuning uchun bu yerda tekshiramiz
@@ -67,12 +73,16 @@ case "$TGID" in ''|*[!0-9]*) xato "Telegram ID faqat raqam bo'lishi kerak: '$TGI
 
 BOTUSER="$(curl -s -m 20 "https://api.telegram.org/bot${TOKEN}/getMe" | "$PY" -c 'import json,sys; d=json.load(sys.stdin); print(d["result"]["username"] if d.get("ok") else "")' 2>/dev/null)"
 [ -n "$BOTUSER" ] || xato "Bot token ishlamadi (getMe). Tokenni tekshiring yoki internetni."
-ok "Bot: @$BOTUSER · ega: $OWNER ($TGID) · $BIZ"
+ok "Bot: @$BOTUSER · ega: $OWNER ($TGID) · $BIZ · profil: $PROFIL"
 
 # ---------------------------------------------------------------- 2) fayllar
 mkdir -p "$J/tg/inbox" "$B/1-tizim" "$B/3-shaxsiy" "$B/9-arxiv" \
-         "$B/2-biznes/obyektlar" "$B/2-biznes/kontent" "$B/2-biznes/reklama" \
-         "$B/2-biznes/hisobotlar" "$B/2-biznes/sayt" "$B/2-biznes/mijozlar"
+         "$B/2-biznes/kontent" "$B/2-biznes/reklama" "$B/2-biznes/hisobotlar" "$B/2-biznes/mijozlar"
+if [ "$PROFIL" = montaj ]; then
+  mkdir -p "$B/2-biznes/montaj"
+else
+  mkdir -p "$B/2-biznes/obyektlar" "$B/2-biznes/sayt"
+fi
 touch "$CHALA"
 
 quy() {   # quy <shablon> <manzil> — __KALIT__ larni almashtirib yozadi
@@ -90,16 +100,22 @@ PY
 quy "$SH/jarvis-loop.sh"     "$J/jarvis-loop.sh"
 quy "$SH/jarvis-watchdog.sh" "$J/jarvis-watchdog.sh"
 quy "$SH/jarvis-start.sh"    "$J/jarvis-start.sh"
-quy "$SH/JARVIS.md"          "$J/JARVIS.md"
+quy "$SHP/JARVIS.md"         "$J/JARVIS.md"
 cp  "$SH/ovoz.py" "$SH/patch-telegram-plugin.sh" "$J/"
 chmod +x "$J"/*.sh "$J"/*.py
-[ -e "$B/CLAUDE.md" ] || quy "$SH/brain-CLAUDE.md" "$B/CLAUDE.md"
+[ -e "$B/CLAUDE.md" ] || quy "$SHP/brain-CLAUDE.md" "$B/CLAUDE.md"
 [ -e "$B/1-tizim/biznes.md" ] || printf '# %s\n\nEgasi: %s\nMaqsad: %s\n\n(Bu faylni to'"'"'ldiring: nima sotiladi, qayerda, narx oralig'"'"'i, kim mijoz, aloqa raqamlari, ijtimoiy tarmoq havolalari.)\n' "$BIZ" "$OWNER" "$GOAL" > "$B/1-tizim/biznes.md"
 
 stub() { [ -e "$1" ] || printf '%b\n' "$2" > "$1"; }
 stub "$B/1-tizim/uslub.md"   "# Uslub\n\nFaqat o'zbekcha (lotin), har doim \"siz\", qisqa. Ega bergan \"doim / hech qachon\" qoidalari shu yerga sana bilan yoziladi."
 stub "$B/1-tizim/kalitlar.md" "# Kalitlar xaritasi (qiymatsiz)\n\nBarcha kalitlar ~/jarvis/.env da. Bu faylda faqat nomi va nima uchunligi yoziladi."
-stub "$B/1-tizim/texnik.md"  "# Tizim holati\n\n- $(date '+%F') · o'rnatildi: Telegram bot, ovoz. Meta, e'lon, sayt — hali ulanmagan."
+if [ "$PROFIL" = montaj ]; then
+  stub "$B/1-tizim/texnik.md" "# Tizim holati\n\n- $(date '+%F') · o'rnatildi: Telegram bot, ovoz. Montaj asboblari: montaj/setup.sh dan keyin. Meta — hali ulanmagan."
+  stub "$B/1-tizim/montaj-qoidalari.md" "# Montaj qoidalari\n\nEga montajni tanqid qilsa yoki maqtasa — shu yerga sana bilan yoziladi (umumiy did). Bitta mijozga xos qoida — mijoz fayliga.\n\n- $(date '+%F') · boshlang'ich: keskin punch-zoom yo'q, matn yuzga tushmaydi, kadr doim ko'rinadi, fon musiqasi har doim (motion-montaj SKILL.md, Qat'iy saboqlar)."
+  stub "$B/2-biznes/montaj/navbat.md" "# Montaj navbati\n\n| sana | mijoz | material | talab | holat |\n|---|---|---|---|---|"
+else
+  stub "$B/1-tizim/texnik.md"  "# Tizim holati\n\n- $(date '+%F') · o'rnatildi: Telegram bot, ovoz. Meta, e'lon, sayt — hali ulanmagan."
+fi
 stub "$B/2-biznes/tasklar.md" "# Tasklar"
 stub "$B/3-shaxsiy/ega.md"   "# $OWNER\n\n(Ish vaqti, qanday xabar yoqadi, nimani yoqtirmaydi.)"
 
@@ -183,6 +199,7 @@ if [ -n "$BP" ] && kill -0 "$BP" 2>/dev/null; then
   ok "$NAME ishlayapti (watchdog ulandi). Telegramda @$BOTUSER ga yozing."
   echo "   Eslatma: ega avval botga /start bosishi kerak — aks holda bot unga yoza olmaydi."
   echo "   Boshqarish: ~/jarvis/jarvis-start.sh status | restart | yangi-sessiya | stop | log"
+  [ "$PROFIL" = montaj ] && echo "   Montaj asboblari hali o'rnatilmagan: zsh $KIT/montaj/setup.sh   (10-25 daqiqa)"
 else
   ogoh "Ko'prik 150s ichida ko'tarilmadi. Tekshirish: tail -20 ~/jarvis/jarvis.log . Sababni tuzatib, install.sh ni qayta ishga tushirish mumkin."
   exit 1
