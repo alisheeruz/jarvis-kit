@@ -1,9 +1,10 @@
 # Jarvis kit
 
 Biznes uchun 24/7 Telegram yordamchi: Claude Code `--channels` + Telegram plugin + launchd (macOS).
-Ikki profil (`sozlama.json` → `PROFIL`):
+Uch profil (`sozlama.json` → `PROFIL`):
 - `kochmas-mulk` — media analitika, post joylash, target, sayt, e'lon.
 - `montaj` — asosan video montaj (Remotion motion-montaj, o'zbek whisper subtitr, musiqa/SFX), qo'shimcha SMM va marketing. Shablonlar: `shablon/montaj/`, asboblar: `montaj/setup.sh`.
+- `travel` — turizm kompaniyasi uchun to'liq marketing va sotuv: tur fayllari, lidlar voronkasi, copywriting, kontent-plan, target, analitika, videografiya/montaj (`montaj/setup.sh` bilan). Shablonlar: `shablon/travel/`.
 
 - `ARXITEKTURA.md` — tizim tuzilishi va qurish bosqichlari
 - `shablon/brain-CLAUDE.md` — konstitutsiya (o'rnatilgach `~/brain/CLAUDE.md`)
@@ -42,7 +43,7 @@ git clone https://github.com/alisheeruz/jarvis-kit ~/jarvis-kit    # bor bo'lsa:
 ### 4. Foydalanuvchidan so'ra (bitta xabarda, hammasini)
 | Kalit | Nima | Qayerdan |
 |---|---|---|
-| `PROFIL` | `kochmas-mulk` yoki `montaj` | ish turiga qarab: montajchi/SMM → `montaj` |
+| `PROFIL` | `kochmas-mulk`, `montaj` yoki `travel` | ish turiga qarab: montajchi/SMM → `montaj`, turizm kompaniyasi → `travel` |
 | `OWNER` | Biznes egasining ism-familiyasi | |
 | `BIZ` | Biznes nomi | |
 | `GOAL` | Asosiy maqsad, bir jumla | masalan "ko'proq lid va sotuv" |
@@ -67,7 +68,8 @@ U o'zi: bun ni qo'yadi, tokenni tekshiradi, `~/jarvis` va `~/brain` ni yaratadi,
 
 Eslatma: o'rnatuvchi `~/.claude/settings.json` ga `skipDangerousModePermissionPrompt: true` va `~/.claude.json` ga `~/brain` uchun ishonch belgisini yozadi (zaxira nusxa yonida qoladi) — foydalanuvchiga bir qatorda ayt.
 
-### 5b. Faqat `PROFIL=montaj`: montaj asboblari
+### 5b. `PROFIL=montaj` va `PROFIL=travel`: montaj asboblari
+`travel` uchun ixtiyoriy, lekin ega video/reels ham so'rasa kerak (Mac talabi pastda).
 Avval so'ra: `montaj-media.zip` (musiqa + SFX, o'rnatuvchi beradi) shu Mac'ning `~/Downloads` yoki `~/Desktop` ida bormi? Bo'lmasa — AirDrop qilishini so'ra (zipsiz ham o'rnatiladi, keyin qayta ishga tushirsa qo'shiladi).
 ```
 zsh ~/jarvis-kit/montaj/setup.sh
@@ -87,6 +89,8 @@ Ko'prik ko'tarilmasa: `tail -30 ~/jarvis/jarvis.log` va `~/jarvis/watchdog.log` 
 
 ### 8. 1-bosqichga o't (xotirani to'ldirish)
 **`montaj` profili:** egadan uning mijozlari/brendlari haqida so'ra va har biriga konstitutsiya 5-moddasidagi shaklda `~/brain/2-biznes/mijozlar/<nom>.md` yarat; egasining montaj didini (namuna reelslar havolasi, nima yoqadi, nima yoqmaydi) `~/brain/1-tizim/montaj-qoidalari.md` ga yoz. Keyin sinov: ega botga 20 MB gacha qisqa video yuborib "montaj qil" desin — tayyor video Telegramga qaytishini u tasdiqlasin.
+
+**`travel` profili:** egadan so'ra: kompaniya nima sotadi (yo'nalishlar, mavsum, narx oralig'i, mijoz portreti, aloqa, IG/TG havolalar, raqobatchilar) → `~/brain/1-tizim/biznes.md`; brend (ohang, ranglar, logotip) → `1-tizim/brend.md`; reklama va postda narx qaysi valyutada ko'rsatiladi → `1-tizim/uslub.md`. Keyin hozir sotuvdagi har tur uchun konstitutsiya 5-moddasidagi shaklda `~/brain/2-biznes/turlar/<yo'nalish>-<YYYY-MM>.md` yarat (ega narx jadvali skrinshotini tashlasa — o'qib to'ldir, yetishmaganini so'ra). Sinov: ega botga "Antaliya turiga post va reels ssenariysi yoz" desin — matndagi har fakt tur faylidan kelganini tekshir.
 
 **`kochmas-mulk` profili:**
 `ARXITEKTURA.md` 6-bo'limi, 1-bosqich. Foydalanuvchidan biznes haqida so'ra (nima sotadi, qayerda, narx oralig'i, mijoz kim, aloqa, ijtimoiy tarmoq havolalari) va har obyekt uchun konstitutsiya 5-moddasidagi shaklda `~/brain/2-biznes/obyektlar/<nom>.md` yarat. Yetishmagan maydonni so'ra — o'ylab topma.

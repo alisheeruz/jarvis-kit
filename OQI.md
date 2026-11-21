@@ -54,6 +54,15 @@ Meta tokenini olish: business.facebook.com → Settings → Users → System use
 - Plugin yangilansa: `zsh ~/jarvis/patch-telegram-plugin.sh` ni qayta ishga tushiring.
 - `~/.claude/settings.json` ga `skipDangerousModePermissionPrompt: true` yoziladi (zaxira nusxa yonida qoladi).
 
+## Travel profili (`PROFIL: "travel"`)
+Turizm kompaniyasi egasi uchun: to'liq marketing va sotuv bo'limi.
+- Xotira: `~/brain/2-biznes/turlar/` (har tur bitta fayl — narx, sana, mehmonxona, nima kiradi, viza, joylar), `mijozlar/lidlar-<oy>.md` (voronka: so'rov → konsultatsiya → avans → to'lov → safar → qayta sotuv), `sotuv/skriptlar.md`, `kontent/reja.md`.
+- Har kuni ertalab: bugungi lid ishlari, avans kutilayotgan bronlar, 7 kun ichida uchadiganlar, kontent rejasi.
+- Copywriting, reels ssenariysi va syomka rejasi, kontent-plan, target rejasi, haftalik hisobot. Mijozga o'zi yozmaydi — javob qoralamasini egaga beradi.
+- Video montaj uchun keyin `zsh jarvis-kit/montaj/setup.sh` (pastdagi montaj talablari bilan bir xil).
+- Pasport rasmlari faqat `~/brain/2-biznes/mijozlar/` da qoladi, hech qayerga yuborilmaydi. Shunga qaramay, botga pasport tashlashni kamaytirish tavsiya qilinadi (Telegram serverida qoladi).
+- Meta (analitika, post, target) — 2-bosqich, yuqoridagi jadval bo'yicha.
+
 ## Montaj profili (`PROFIL: "montaj"`)
 Montajchi / SMM / marketolog uchun. O'rnatish yuqoridagidek, keyin qo'shimcha:
 ```

@@ -60,7 +60,8 @@ PROFIL="$(oqi PROFIL)"; PROFIL="${PROFIL:-kochmas-mulk}"
 case "$PROFIL" in
   kochmas-mulk) SHP="$SH" ;;
   montaj)       SHP="$SH/montaj" ;;
-  *) xato "PROFIL noto'g'ri: '$PROFIL' (kochmas-mulk yoki montaj)" ;;
+  travel)       SHP="$SH/travel" ;;
+  *) xato "PROFIL noto'g'ri: '$PROFIL' (kochmas-mulk, montaj yoki travel)" ;;
 esac
 XODIMLAR="$(oqi XODIMLAR)"
 
@@ -80,6 +81,8 @@ mkdir -p "$J/tg/inbox" "$B/1-tizim" "$B/3-shaxsiy" "$B/9-arxiv" \
          "$B/2-biznes/kontent" "$B/2-biznes/reklama" "$B/2-biznes/hisobotlar" "$B/2-biznes/mijozlar"
 if [ "$PROFIL" = montaj ]; then
   mkdir -p "$B/2-biznes/montaj"
+elif [ "$PROFIL" = travel ]; then
+  mkdir -p "$B/2-biznes/montaj" "$B/2-biznes/turlar" "$B/2-biznes/sotuv" "$B/2-biznes/kontent/ssenariylar"
 else
   mkdir -p "$B/2-biznes/obyektlar" "$B/2-biznes/sayt"
 fi
@@ -113,6 +116,14 @@ if [ "$PROFIL" = montaj ]; then
   stub "$B/1-tizim/texnik.md" "# Tizim holati\n\n- $(date '+%F') · o'rnatildi: Telegram bot, ovoz. Montaj asboblari: montaj/setup.sh dan keyin. Meta — hali ulanmagan."
   stub "$B/1-tizim/montaj-qoidalari.md" "# Montaj qoidalari\n\nEga montajni tanqid qilsa yoki maqtasa — shu yerga sana bilan yoziladi (umumiy did). Bitta mijozga xos qoida — mijoz fayliga.\n\n- $(date '+%F') · boshlang'ich: keskin punch-zoom yo'q, matn yuzga tushmaydi, kadr doim ko'rinadi, fon musiqasi har doim (motion-montaj SKILL.md, Qat'iy saboqlar)."
   stub "$B/2-biznes/montaj/navbat.md" "# Montaj navbati\n\n| sana | mijoz | material | talab | holat |\n|---|---|---|---|---|"
+elif [ "$PROFIL" = travel ]; then
+  stub "$B/1-tizim/texnik.md" "# Tizim holati\n\n- $(date '+%F') · o'rnatildi: Telegram bot, ovoz. Montaj asboblari: montaj/setup.sh dan keyin. Meta (analitika, post, target) — hali ulanmagan."
+  stub "$B/1-tizim/brend.md" "# Brend\n\n(Ovoz ohangi, ranglar hex, shrift, logotip yo'li, IG/TG havolalar. Ega bilan birinchi suhbatda to'ldiriladi.)"
+  stub "$B/1-tizim/montaj-qoidalari.md" "# Montaj qoidalari\n\nEga videoni tanqid qilsa yoki maqtasa — shu yerga sana bilan yoziladi.\n\n- $(date '+%F') · boshlang'ich: keskin punch-zoom yo'q, matn yuzga tushmaydi, kadr doim ko'rinadi, fon musiqasi har doim (motion-montaj SKILL.md, Qat'iy saboqlar)."
+  stub "$B/2-biznes/montaj/navbat.md" "# Montaj navbati\n\n| sana | tur/mavzu | material | talab | holat |\n|---|---|---|---|---|"
+  stub "$B/2-biznes/mijozlar/lidlar-$(date '+%Y-%m').md" "# Lidlar $(date '+%Y-%m')\n\n| sana | ism | telefon | manba | qiziqish | bosqich | keyingi qadam + sana | izoh |\n|---|---|---|---|---|---|---|---|"
+  stub "$B/2-biznes/sotuv/skriptlar.md" "# Sotuv skriptlari\n\n(Ega bilan birga to'ldiriladi: birinchi javob, narx so'raganda, 'qimmat', 'o'ylab ko'raman', 'boshqasida arzon', avans so'rash.)"
+  stub "$B/2-biznes/kontent/reja.md" "# Kontent-plan\n\n| sana | format | mavzu | qaysi tur | CTA | holat |\n|---|---|---|---|---|---|"
 else
   stub "$B/1-tizim/texnik.md"  "# Tizim holati\n\n- $(date '+%F') · o'rnatildi: Telegram bot, ovoz. Meta, e'lon, sayt — hali ulanmagan."
 fi
@@ -199,7 +210,7 @@ if [ -n "$BP" ] && kill -0 "$BP" 2>/dev/null; then
   ok "$NAME ishlayapti (watchdog ulandi). Telegramda @$BOTUSER ga yozing."
   echo "   Eslatma: ega avval botga /start bosishi kerak — aks holda bot unga yoza olmaydi."
   echo "   Boshqarish: ~/jarvis/jarvis-start.sh status | restart | yangi-sessiya | stop | log"
-  [ "$PROFIL" = montaj ] && echo "   Montaj asboblari hali o'rnatilmagan: zsh $KIT/montaj/setup.sh   (10-25 daqiqa)"
+  [ "$PROFIL" = montaj ] || [ "$PROFIL" = travel ] && echo "   Montaj asboblari hali o'rnatilmagan: zsh $KIT/montaj/setup.sh   (10-25 daqiqa)"
 else
   ogoh "Ko'prik 150s ichida ko'tarilmadi. Tekshirish: tail -20 ~/jarvis/jarvis.log . Sababni tuzatib, install.sh ni qayta ishga tushirish mumkin."
   exit 1
