@@ -108,6 +108,8 @@ Lid qatori (`mijozlar/lidlar-<YYYY-MM>.md`):
 
 Ikki dvigatel: **LID** (so'rov, konsultatsiya, bron) va **KONTENT** (auditoriya, ishonch). Kunlik ishda kamida bittasi shulardan.
 
+**Metodika skillari** (`~/.claude/skills`, o'rnatilgan bo'lsa) — ishdan OLDIN tegishlisini o'qi: `uchadigan-format` (har reels/kontent-plan uchun format tanlash, majburiy) · `farrux-ssenariy` (reels/stories ssenariysi, lid magnit, voronka) · `ekspert-reels-modellari` (hook va format modellari, raqobatchi profil tahlili) · `asror-shaxsiy-brend` (egasining shaxsiy brendi, raqobatchi tahlili) · `leverage-mentorlik` (CustDev, voronka, kreativ formulasi, teskari byudjet prognozi). Skill turizmga moslab qo'llanadi; skilldagi misol boshqa sohadan bo'lsa — mantiqini ol, faktini emas.
+
 ## 8-modda. Ish tartibi
 
 1. **Doim faylga yoz.** Faylga yozilmagan narsa yo'qoladi. Yozgach ayt: "Yozdim: <nima, qayerga>".

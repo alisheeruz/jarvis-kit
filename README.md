@@ -35,6 +35,7 @@ Mijozda Mac bo'lmasa, Jarvis Linux'da ishlaydi: Windows'da **WSL2 Ubuntu** ichid
 3. 4-qadam (sozlama so'rash) xuddi shunday.
 4. `bash ~/jarvis-kit/server/install-server.sh` — 10 daqiqalik timeout bilan. U o'zi: apt paketlari, Toshkent vaqt zonasi, bun, `~/jarvis` + `~/brain`, plugin + patch, headless sozlamalar, `<slug>-jarvis.service` + `<slug>-jarvis-watchdog.timer`.
 5. Montaj kerak bo'lsa (`montaj`, `travel`): `zsh ~/jarvis-kit/montaj/setup.sh` fonda (Linux'da Chrome kutubxonalarini ham qo'yadi). `montaj-media.zip` — Windows'da Downloads'ga tashlansa: `cp /mnt/c/Users/<user>/Downloads/montaj-media.zip ~/` keyin setup.sh. Render CPU'da, Mac'dan sekinroq.
+5c. Metodika skillari (`travel`): o'rnatuvchi `travel-skillar.zip` beradi (repo'da yo'q). Windows Downloads'ga tashlansa: `mkdir -p ~/.claude/skills && unzip -oq /mnt/c/Users/<user>/Downloads/travel-skillar.zip -d ~/.claude/skills` → `ls ~/.claude/skills` da 5 ta papka. Keyin `~/jarvis/jarvis-start.sh restart` (bot skillarni ko'rsin).
 6. Tekshir: `~/jarvis/jarvis-start.sh status`, `journalctl -u <slug>-jarvis -n 30`. Ega botga "kimsan?" yozib javob olmaguncha "ishlayapti" dema. Keyin 7-9 qadamlar.
 
 Windows cheklovlari (egaga ayt): noutbuk tokka ulangan tursin (batareyada uxlashi mumkin); qayta yonganda Jarvis faqat Windows'ga kirilgandan keyin ishlaydi (avto-kirish: `netplwiz`); Windows Update qayta yoqsa ham shu. Login token yangilanmay qolsa: Ubuntu'da `claude setup-token` → chiqqan tokenni `~/jarvis/.claude-token` ga yoz (chmod 600) → `~/jarvis/jarvis-start.sh restart`.
