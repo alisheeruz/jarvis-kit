@@ -1,0 +1,7 @@
+[Unit]
+Description=__NAME__ watchdog (heartbeat + telegram poller)
+
+[Service]
+Type=oneshot
+Environment=HOME=__HOME__
+ExecStart=/usr/bin/zsh __HOME__/jarvis/jarvis-watchdog.sh

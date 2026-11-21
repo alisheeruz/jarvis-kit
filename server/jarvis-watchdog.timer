@@ -1,0 +1,9 @@
+[Unit]
+Description=__NAME__ watchdog taymeri
+
+[Timer]
+OnBootSec=180
+OnUnitActiveSec=60
+
+[Install]
+WantedBy=timers.target

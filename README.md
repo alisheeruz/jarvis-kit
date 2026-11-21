@@ -1,6 +1,6 @@
 # Jarvis kit
 
-Biznes uchun 24/7 Telegram yordamchi: Claude Code `--channels` + Telegram plugin + launchd (macOS).
+Biznes uchun 24/7 Telegram yordamchi: Claude Code `--channels` + Telegram plugin + launchd (macOS) yoki systemd (Linux server / Windows WSL2 — `server/`, `windows/`, pastdagi W bo'limi).
 Uch profil (`sozlama.json` → `PROFIL`):
 - `kochmas-mulk` — media analitika, post joylash, target, sayt, e'lon.
 - `montaj` — asosan video montaj (Remotion motion-montaj, o'zbek whisper subtitr, musiqa/SFX), qo'shimcha SMM va marketing. Shablonlar: `shablon/montaj/`, asboblar: `montaj/setup.sh`.
@@ -16,6 +16,28 @@ Uch profil (`sozlama.json` → `PROFIL`):
 ## CLAUDE UCHUN: "do it" deyilganda shu tartibda bajar
 
 Sen shu Mac'ning terminalidagi Claude Code'san. Foydalanuvchi bu repo havolasini berib "do it" dedi — demak quyidagini boshidan oxirigacha o'zing bajarasan. Har qadamdan keyin bir qatorda holatni ayt. Bajarib bo'lmaydigan joyda to'xtab, aniq nima kerakligini so'ra.
+
+### W. Windows noutbuk yoki Linux server (Mac emas)
+Mijozda Mac bo'lmasa, Jarvis Linux'da ishlaydi: Windows'da **WSL2 Ubuntu** ichida (noutbukning o'zi server bo'ladi) yoki VPS'da. Miya va shablonlar Mac'dagi bilan bir xil, faqat launchd o'rniga systemd (`server/`).
+
+**Windows'da odam qiladigan qism (Claude'dan OLDIN):**
+1. PowerShell → "Run as administrator":
+   ```
+   irm https://raw.githubusercontent.com/alisheeruz/jarvis-kit/main/windows/ornatish.ps1 -OutFile $env:TEMP\jarvis.ps1; Set-ExecutionPolicy -Scope Process Bypass -Force; & $env:TEMP\jarvis.ps1
+   ```
+   Birinchi marta WSL o'rnatiladi → kompyuter qayta yoqiladi → Ubuntu foydalanuvchi/parol so'raydi → buyruq **yana bir marta** ishga tushiriladi (systemd, avto-yonish, uyqusiz rejim).
+2. `wsl -u root` → Ubuntu ichida: `curl -fsSL https://claude.ai/install.sh | bash && source ~/.bashrc` (429/xato bersa — pastdagi GCS aylanma yo'li, `darwin-arm64` o'rniga `linux-x64`).
+3. `claude` → mijoz akkaunti bilan login (havola Windows brauzerida ochiladi, kod qaytarib qo'yiladi) → shu repo havolasi + "do it".
+
+**Claude qiladigan qism (root, WSL yoki server ichida):**
+1. `ps -p 1 -o comm=` → `systemd` bo'lishi shart. Bo'lmasa — WSL'da `windows/ornatish.ps1` qayta ishga tushirilishi kerak, egaga ayt.
+2. 1-2 qadam (repo, o'qish) — `install.sh` o'rniga `server/install-server.sh` va `server/` ni o'qi. `~/jarvis/jarvis-loop.sh` bor bo'lsa — to'xta.
+3. 4-qadam (sozlama so'rash) xuddi shunday.
+4. `bash ~/jarvis-kit/server/install-server.sh` — 10 daqiqalik timeout bilan. U o'zi: apt paketlari, Toshkent vaqt zonasi, bun, `~/jarvis` + `~/brain`, plugin + patch, headless sozlamalar, `<slug>-jarvis.service` + `<slug>-jarvis-watchdog.timer`.
+5. Montaj kerak bo'lsa (`montaj`, `travel`): `zsh ~/jarvis-kit/montaj/setup.sh` fonda (Linux'da Chrome kutubxonalarini ham qo'yadi). `montaj-media.zip` — Windows'da Downloads'ga tashlansa: `cp /mnt/c/Users/<user>/Downloads/montaj-media.zip ~/` keyin setup.sh. Render CPU'da, Mac'dan sekinroq.
+6. Tekshir: `~/jarvis/jarvis-start.sh status`, `journalctl -u <slug>-jarvis -n 30`. Ega botga "kimsan?" yozib javob olmaguncha "ishlayapti" dema. Keyin 7-9 qadamlar.
+
+Windows cheklovlari (egaga ayt): noutbuk tokka ulangan tursin (batareyada uxlashi mumkin); qayta yonganda Jarvis faqat Windows'ga kirilgandan keyin ishlaydi (avto-kirish: `netplwiz`); Windows Update qayta yoqsa ham shu. Login token yangilanmay qolsa: Ubuntu'da `claude setup-token` → chiqqan tokenni `~/jarvis/.claude-token` ga yoz (chmod 600) → `~/jarvis/jarvis-start.sh restart`.
 
 ### 0. Telegramsiz (faqat terminal) montaj rejimi
 Foydalanuvchi "faqat terminal", "Telegram kerak emas" desa — pastdagi 3-9 qadamlar O'RNIGA shu:

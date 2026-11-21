@@ -14,6 +14,18 @@ ok()   { print -P "%F{green}OK%f  $*"; }
 xato() { print -P "%F{red}XATO%f $*"; exit 1; }
 ogoh() { print -P "%F{yellow}DIQQAT%f $*"; }
 mkdir -p "$LB"
+OS="$(uname -s | tr 'A-Z' 'a-z')"   # darwin | linux
+
+# Linux server: Remotion'ning headless Chrome'i uchun tizim kutubxonalari + shriftlar
+if [ "$OS" = linux ] && command -v apt-get >/dev/null && [ "$(id -u)" = 0 ]; then
+  echo "Tizim kutubxonalari (Chrome, shriftlar)..."
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update -qq >/dev/null 2>&1
+  apt-get install -y -qq unzip xz-utils libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
+    libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libxshmfence1 \
+    fonts-dejavu-core fonts-liberation >/dev/null 2>&1 || ogoh "ba'zi tizim kutubxonalari o'rnatilmadi"
+  apt-get install -y -qq libasound2t64 >/dev/null 2>&1 || apt-get install -y -qq libasound2 >/dev/null 2>&1
+fi
 
 # ---------------------------------------------------------------- 1) python muhit
 if ! command -v uv >/dev/null; then
@@ -39,11 +51,11 @@ for n in "$(command -v node)" $HOME/.nvm/versions/node/*/bin/node(N) /opt/homebr
   [ -x "$n" ] && [ "$(nodever "$n")" -ge 18 ] 2>/dev/null && { NODE="$n"; break; }
 done
 if [ -z "$NODE" ]; then
-  NV=v22.12.0; ARCH=$([ "$(uname -m)" = arm64 ] && echo arm64 || echo x64)
+  NV=v22.12.0; case "$(uname -m)" in arm64|aarch64) ARCH=arm64;; *) ARCH=x64;; esac
   echo "node $NV yuklanmoqda..."
   T="$(mktemp -d)"
-  curl -fsSL "https://nodejs.org/dist/$NV/node-$NV-darwin-$ARCH.tar.gz" | tar -xz -C "$T" || xato "node yuklanmadi"
-  rm -rf "$HOME/.local/node"; mv "$T/node-$NV-darwin-$ARCH" "$HOME/.local/node"; rm -rf "$T"
+  curl -fsSL "https://nodejs.org/dist/$NV/node-$NV-$OS-$ARCH.tar.gz" | tar -xz -C "$T" || xato "node yuklanmadi"
+  rm -rf "$HOME/.local/node"; mv "$T/node-$NV-$OS-$ARCH" "$HOME/.local/node"; rm -rf "$T"
   NODE="$HOME/.local/node/bin/node"
 fi
 # launchd ostidagi bot nvm/brew ni ko'rmasligi mumkin — ~/.local/bin ga bog'laymiz
@@ -65,11 +77,11 @@ ok "skillar: $(ls "$M/skillar" | tr '\n' ' ')→ ~/.claude/skills"
 # ---------------------------------------------------------------- 4) papkalar + musiqa/SFX
 mkdir -p "$HOME/Montaj"/{kirish,loyihalar,tayyor,musiqa,sfx}
 ZIP=""
-for z in "$KIT/montaj-media.zip" "$HOME/Downloads/montaj-media.zip" "$HOME/Desktop/montaj-media.zip"; do
+for z in "$KIT/montaj-media.zip" "$HOME/montaj-media.zip" "$HOME/Downloads/montaj-media.zip" "$HOME/Desktop/montaj-media.zip"; do
   [ -f "$z" ] && { ZIP="$z"; break; }
 done
 if [ -n "$ZIP" ]; then
-  ditto -x -k "$ZIP" "$HOME/Montaj" || xato "$ZIP ochilmadi"
+  if [ "$OS" = darwin ]; then ditto -x -k "$ZIP" "$HOME/Montaj"; else unzip -oq "$ZIP" -d "$HOME/Montaj"; fi || xato "$ZIP ochilmadi"
   ok "musiqa/SFX: $ZIP → ~/Montaj ($(find "$HOME/Montaj/musiqa" -type f \( -iname '*.mp3' -o -iname '*.m4a' -o -iname '*.wav' \) | wc -l | tr -d ' ') musiqa, $(find "$HOME/Montaj/sfx" -type f \( -iname '*.mp3' -o -iname '*.wav' -o -iname '*.m4a' \) | wc -l | tr -d ' ') sfx)"
 elif [ -z "$(ls -A "$HOME/Montaj/sfx")" ]; then
   ogoh "montaj-media.zip topilmadi — ~/Montaj/musiqa va ~/Montaj/sfx bo'sh. Keyin zipni Downloads ga tashlab setup.sh ni qayta ishga tushiring."
