@@ -21,7 +21,9 @@ HEARTBEAT="$HOME/jarvis/.heartbeat"
 LOCK="$HOME/jarvis/.loop.lock"
 if ! mkdir "$LOCK" 2>/dev/null; then
   OLDPID="$(cat "$LOCK/pid" 2>/dev/null)"
-  if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null; then
+  # PID qayta yonishdan keyin boshqa jarayonga berilgan bo'lishi mumkin (WSL/server reboot) —
+  # faqat kill -0 emas, o'sha PID haqiqatan jarvis-loop ekanini tekshiramiz.
+  if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null && tr '\0' ' ' < "/proc/$OLDPID/cmdline" 2>/dev/null | grep -q "jarvis-loop"; then
     echo "[__NAME__] boshqa loop ($OLDPID) ishlayapti — chiqaman $(date '+%F %T')" >> "$LOG"
     exit 0
   fi
